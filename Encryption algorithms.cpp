@@ -119,8 +119,9 @@ int main()
 				//Encrypt using RSA key
 					vector<long int> v_plain, v_crypt;
 					string text;
-					cout << "Write plain text without spaces: ";
-					cin >> text;
+					cout << "Write plain text: ";
+					cin.ignore();
+					getline(cin, text);
 					v_plain = Hash_text_as_vector(text);
 
 					v_crypt = RSA_encrypt_vector(text, key.modulus_n, key.public_key_e);
