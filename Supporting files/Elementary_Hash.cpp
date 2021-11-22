@@ -9,6 +9,7 @@
 #include<cmath>
 #include<fstream>
 #include<cstdlib>
+#include<ctype.h>
 
 //Hash single letter 'A'->2, 'B'->3,....
 int Hash_letter(char a)
@@ -48,9 +49,10 @@ std::vector<long int> Hash_text_as_vector(std::string text)
 	std::vector<long int> v;
 
 	for (int i = 0; i < text.size(); i++)
-	{
-		x = Hash_letter(text[i]);
-		v.push_back(x);
+	{	if (isalpha(text[i]))
+			{x = Hash_letter(text[i]);
+			v.push_back(x); }
+		else { continue; }
 	}
 
 	return v;
