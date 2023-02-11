@@ -1,9 +1,6 @@
 // Encryption algorithms.cpp : Defines the entry point for the console application.
 //
 
-
-
-
 #include "stdafx.h"
 
 #include "RSA_cryptosystem.h"
@@ -25,14 +22,8 @@
 using namespace std;
 
 
-
-
-
-
-
 int main()
 {
-
 	//Download list of primes.
 	vector<int> list_primes;
 	
@@ -86,154 +77,146 @@ int main()
 		{			//Generate RSA key
 		case 1: {generate_RSA_key(cin, key); break; }
 					
-					//Break RSA cryptosystem
-			case 2: {
+				//Break RSA cryptosystem
+		case 2: {
 
-					cout << "Write modulus: ";
-					long int modulus;
-					cin >> modulus;
+				cout << "Write modulus: ";
+				long int modulus;
+				cin >> modulus;
 
-					cout << "Write public key: ";
-					long int public_key;
-					cin >> public_key;
+				cout << "Write public key: ";
+				long int public_key;
+				cin >> public_key;
 
-					RSA_cryptosystem_key broken_key;
-					broken_key = Breaking_code(modulus, public_key, list_primes);
-					cout << "The first prime is: p=" << broken_key.prime_p 
-						 << ". The second prime is: q="
-						 << broken_key.prime_q << ".\n";
-					cout << "The modulus is: " << broken_key.modulus_n << endl;
-					cout << "The public key is: " << broken_key.public_key_e << endl;
+				RSA_cryptosystem_key broken_key;
+				broken_key = Breaking_code(modulus, public_key, list_primes);
+				cout << "The first prime is: p=" << broken_key.prime_p 
+						<< ". The second prime is: q="
+						<< broken_key.prime_q << ".\n";
+				cout << "The modulus is: " << broken_key.modulus_n << endl;
+				cout << "The public key is: " << broken_key.public_key_e << endl;
 					
-					cout << "The private key is: " << broken_key.private_key_d << endl;
+				cout << "The private key is: " << broken_key.private_key_d << endl;
 
-					cout << "Phi(n) is:  " << broken_key.Phi_n << endl;
-					cout << "The gcd is: " << GCD(broken_key.public_key_e, broken_key.Phi_n) << endl;
+				cout << "Phi(n) is:  " << broken_key.Phi_n << endl;
+				cout << "The gcd is: " << GCD(broken_key.public_key_e, broken_key.Phi_n) << endl;
 
-					key = broken_key; 
-					break; }
+				key = broken_key; 
+				break; }
 
-					//Encrypt with RSA saved key
-			case 3: { 
+				//Encrypt with RSA saved key
+		case 3: { 
 				
-				//Encrypt using RSA key
-					vector<long int> v_plain, v_crypt;
-					string text;
-					cout << "Write plain text: ";
-					cin.ignore();
-					getline(cin, text);
-					v_plain = Hash_text_as_vector(text);
+			//Encrypt using RSA key
+				vector<long int> v_plain, v_crypt;
+				string text;
+				cout << "Write plain text: ";
+				cin.ignore();
+				getline(cin, text);
+				v_plain = Hash_text_as_vector(text);
 
-					v_crypt = RSA_encrypt_vector(text, key.modulus_n, key.public_key_e);
+				v_crypt = RSA_encrypt_vector(text, key.modulus_n, key.public_key_e);
 
-					for (int i = 0; i < v_plain.size(); i++)
-						{
-							cout << v_plain[i] << " ";
-							}
-					cout << endl;
+				for (int i = 0; i < v_plain.size(); i++)
+					{
+						cout << v_plain[i] << " ";
+						}
+				cout << endl;
 
+				for (int i = 0; i < v_crypt.size(); i++)
+				{
+					cout << v_crypt[i] << " ";
+				}
+				cout << endl;
+
+				cout << RSA_decrypt(v_crypt, key.modulus_n, key.private_key_d) << endl; 
+		
+				string choice2;
+				cout << "Would you like to export the cryptext to a .txt file? Yes/No\n";
+					cin >> choice2;
+				if (choice2 == "Yes" || choice2 == "YES" || choice2 == "yes")
+				{
+					string filename;
+					cout << "What would you like to name the file?\n";
+					cin >> filename;
+
+					ofstream myfile(filename.c_str());
+
+					//myfile << "This file contains an encrypted message using the RSA generated public key ( " << key.modulus_n << " , " << key.public_key_e << " )\n\n";
+
+					myfile << key.modulus_n << " " << key.public_key_e << "\n";
 					for (int i = 0; i < v_crypt.size(); i++)
 					{
-						cout << v_crypt[i] << " ";
+						myfile << v_crypt[i] << " ";
 					}
-					cout << endl;
+					myfile << endl;
+					myfile.close();
 
-					cout << RSA_decrypt(v_crypt, key.modulus_n, key.private_key_d) << endl; 
-		
-					string choice2;
-					cout << "Would you like to export the cryptext to a .txt file? Yes/No\n";
-						cin >> choice2;
-					if (choice2 == "Yes" || choice2 == "YES" || choice2 == "yes")
-					{
-						string filename;
-						cout << "What would you like to name the file?\n";
-						cin >> filename;
+					}
 
-						ofstream myfile(filename.c_str());
+				break;
+			}
+			
+				//Decrypt message 
+		case 4: { vector<long int> v_plain, v_crypt;
+					string text;				
+					string filename;
+				    cout << "What file would you like me to open? \n";
+					cin>> filename;
+                    bucky.open(filename);
+					if (!bucky.is_open()) { cout << "This file does not exist\n"; break; }
 
-						//myfile << "This file contains an encrypted message using the RSA generated public key ( " << key.modulus_n << " , " << key.public_key_e << " )\n\n";
+					long int number_block;
+					//Read the public key
+					{bucky >> number_block;
+					key.modulus_n = number_block;
+					bucky >> number_block;
+					key.public_key_e = number_block; }
 
-						myfile << key.modulus_n << " " << key.public_key_e << "\n";
-						for (int i = 0; i < v_crypt.size(); i++)
+					//Break the key
+					key = Breaking_code(key.modulus_n, key.public_key_e, list_primes);
+
+					//Read cryptext
+					{bucky >> number_block;
+					while (bucky.good())
 						{
-							myfile << v_crypt[i] << " ";
+							v_crypt.push_back(number_block);
+							bucky >> number_block;
 						}
-						myfile << endl;
-						myfile.close();
+					v_crypt.push_back(number_block);
+					}
 
-
-
-
+					//Print the cryptext vector
+					{for (int i = 0; i < v_crypt.size(); i++)
+					{  cout << v_crypt[i]<< " ";
 						}
+					cout << endl;
+					}
 
-
+					//Decrypt cryptext and print plaintext
+					cout << RSA_decrypt(v_crypt, key.modulus_n, key.private_key_d) << endl;
+					  
+					bucky.close();
 					break;
 				}
-			
-					//Decrypt message 
-			case 4: { vector<long int> v_plain, v_crypt;
-					  string text;
-				
-					  string filename;
-				      cout << "What file would you like me to open? \n";
-					  cin>> filename;
-                      bucky.open(filename);
-					  if (!bucky.is_open()) { cout << "This file does not exist\n"; break; }
 
-					  long int number_block;
-					  //Read the public key
-					  {bucky >> number_block;
-					  key.modulus_n = number_block;
-					  bucky >> number_block;
-					  key.public_key_e = number_block; }
-
-					  //Break the key
-					  key = Breaking_code(key.modulus_n, key.public_key_e, list_primes);
-
-					  //Read cryptext
-					  {bucky >> number_block;
-					  while (bucky.good())
-							{
-								v_crypt.push_back(number_block);
-								bucky >> number_block;
-							}
-					  v_crypt.push_back(number_block);
-
-					  }
-
-					  //Print the cryptext vector
-					  {for (int i = 0; i < v_crypt.size(); i++)
-					  {  cout << v_crypt[i]<< " ";
-							}
-					  cout << endl;
-
-					  }
-
-					  //Decrypt cryptext and print plaintext
-					  cout << RSA_decrypt(v_crypt, key.modulus_n, key.private_key_d) << endl;
-					  
-					  bucky.close();
-					  break;
-					}
-					//Print RSA public key
-			case 5: {cout << "Public key: (n,e)=( " << key.modulus_n << " , " 
-						  << key.public_key_e << " )\n"; 
-					
-					 break;	
-					}
+				//Print RSA public key
+		case 5: {cout << "Public key: (n,e)=( " << key.modulus_n << " , " 
+						<< key.public_key_e << " )\n"; 		
+					break;	
+				}
 			       
-					//Print full key
-			case 6: {cout << "Public key: (n,e)=( " << key.modulus_n << " , "
-						  << key.public_key_e << " )\n"; 
-					 cout << "First prime: " << key.prime_p 
-						  << " Second prime: " << key.prime_q << endl;
-					 cout << "Private key: " << key.private_key_d << endl;
-					
-					 break;
-					}
-
-			default:
+				//Print full key
+		case 6: {cout << "Public key: (n,e)=( " << key.modulus_n << " , "
+						<< key.public_key_e << " )\n"; 
+					cout << "First prime: " << key.prime_p 
+						<< " Second prime: " << key.prime_q << endl;
+					cout << "Private key: " << key.private_key_d << endl;
 					break;
+				}
+
+		default:
+				break;
 		}
 
 		//Ask what you want to do again 
@@ -246,7 +229,6 @@ int main()
 			<< "6: Print full RSA key\n"
 			<< "0: Exit\n";
 		}
-
 
 		 cin >> choice;
    }
