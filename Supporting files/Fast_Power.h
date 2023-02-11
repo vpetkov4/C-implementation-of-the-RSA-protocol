@@ -9,7 +9,6 @@
 
 long int Fast_Power(long int x, long int y, long int p);
 
-
 #endif // !1
 
 

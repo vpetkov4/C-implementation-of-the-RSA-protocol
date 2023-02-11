@@ -2,8 +2,6 @@
 #ifndef GUARD_RSA_cryptosystem_h
 #define GUARD_RSA_cryptosystem_h
 
-
-
 #include<iostream>
 #include<vector>
 #include<string>
@@ -38,10 +36,8 @@ long int RSA_encrypt_block(long int plain, long int n, long int e);
 std::vector<long int> RSA_encrypt_vector(std::string text, long int modulus, long int public_key);
 
 
-
 //string RSA_encrypt_sequence(std::string text, long int modulus, long int public_key);
 //string RSA_encrypt_text(std::string text, long int modulus, long int public_key);
-
 
 
 //Decrypt using RSA
@@ -50,8 +46,6 @@ std::string RSA_decrypt(std::vector<long int> v, long int modulus, long int priv
 //Breaing the code by factoring n<10000
 
 RSA_cryptosystem_key Breaking_code(long int modulus, long int public_key, std::vector<int> primes);
-
-
 
 
 #endif // !GUARD_RSA_cryptosystem_h

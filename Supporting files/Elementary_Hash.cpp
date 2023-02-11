@@ -31,16 +31,12 @@ char Hash_to_letter(int x)
 {
 	char a = 'A';
 	
-
 	for(int i = 2;i<28;i++)
 	{
 		if (i == x) return a;
 		a = a + 1;
 	}
 };
-
-
-
 
 //Hash a word as a vector
 std::vector<long int> Hash_text_as_vector(std::string text)
@@ -56,7 +52,6 @@ std::vector<long int> Hash_text_as_vector(std::string text)
 	}
 
 	return v;
-
 };
 
 
@@ -78,5 +73,4 @@ std::string Hash_text_as_sequence(std::string text)
 	}
 
 	return s;
-
 };

@@ -2,8 +2,6 @@
 #ifndef GUARD_Elementary_Hash
 #define GUARD_Elementary_Hash
 
-
-
 #include "stdafx.h"
 
 #include<vector>

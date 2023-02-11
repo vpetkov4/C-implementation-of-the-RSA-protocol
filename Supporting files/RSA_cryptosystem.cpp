@@ -21,37 +21,23 @@ std::istream&  generate_RSA_key(std::istream& in, RSA_cryptosystem_key& RSA_key)
 { 
 	// read the primes
 	std::cout << "First prime: ";
-
 	in >> RSA_key.prime_p;
 
 	std::cout << "Second prime: ";
-
 	in >> RSA_key.prime_q;
 
 	//Compute n and Phi(n);
 	RSA_key.modulus_n = RSA_key.prime_p*RSA_key.prime_q;
 	RSA_key.Phi_n = (RSA_key.prime_p - 1)*(RSA_key.prime_q - 1);
 
-
-
 	//read the public key
-
-
-
-
 	do {
 		std::cout << "Public key e: ";
-
 		in >> RSA_key.public_key_e;
 	} while (GCD(RSA_key.public_key_e, RSA_key.Phi_n) > 1);
 
-
-
-	
-
 	//compute the private key
 	std::tuple<long int, long int, long int> t = Extended_GCD(RSA_key.public_key_e, RSA_key.Phi_n);
-
 
 	//record the private key
 	RSA_key.private_key_d = std::get<1>(t);
@@ -67,16 +53,12 @@ std::istream&  generate_RSA_key(std::istream& in, RSA_cryptosystem_key& RSA_key)
 	return in;
 };
 
-
 //encrypt a letter (Plaintext , modulus , encryption key)
 long int RSA_encrypt_block(long int plain, long int n, long int e )
 {
 	long int x;
-
 	x = Fast_Power(plain, e, n);
-
 	return x;
-
 };
 
 //encrypt text as a vector of numbers
@@ -87,12 +69,11 @@ std::vector<long int> RSA_encrypt_vector(std::string text, long int modulus, lon
 	v_plain = Hash_text_as_vector(text);
 
 	for (int i = 0; i < v_plain.size(); i++)
-	{
+		{
 		x = v_plain[i];
 		x = RSA_encrypt_block(x, modulus, public_key);
 		v_crypt.push_back(x);
-
-	}
+		}
 	return v_crypt;
 };
 
@@ -110,14 +91,9 @@ std::string RSA_decrypt(std::vector<long int> v, long int modulus, long int priv
 	{
 		//quick exponentiation to be added
 		x = Fast_Power(v[i],private_key,modulus);
-
 		s = s + Hash_to_letter(x);
 	}
-
 	return s;
-
-
-
 };
 
 
@@ -147,7 +123,6 @@ RSA_cryptosystem_key Breaking_code(long int modulus, long int public_key, std::v
 	// compute the private key.
 
 	std::tuple<long int, long int, long int> t = Extended_GCD(RSA_key.public_key_e, RSA_key.Phi_n);
-
 
 	//record the private key
 	RSA_key.private_key_d = std::get<1>(t);
